@@ -9,3 +9,19 @@
 `SELECT VERSION()`
 
 > pgadmin password:1qaz@WSX
+
+## Framework Core Tool [https://docs.microsoft.com/zh-tw/ef/core/cli/powershell]
+
+### Code First
+
+`Add-Migration <Name> -Verbose`
+
+`Update-Database <Name> -Verbose`
+
+`Script-Migration <From.Name> <To.Name> -Verbose`
+
+### Db First
+
+`Scaffold-DbContext "Host=<host>;Database=<database>;Username=<username>;Password=<password>;" Npgsql.EntityFrameworkCore.PostgreSQL -Namespace <namespace> -UseDatabaseNames -OutputDir <path>`
+
+`Scaffold-DbContext "Host=localhost;Database=DemoNetCoreDb;Username=postgres;Password=1234;" Npgsql.EntityFrameworkCore.PostgreSQL  -Namespace DemoNamespace -UseDatabaseNames -OutputDir ScaffoldTempTemp`

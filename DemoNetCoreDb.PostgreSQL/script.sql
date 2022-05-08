@@ -22,8 +22,8 @@ CREATE TABLE public."Address"
     CONSTRAINT "PK_Address" PRIMARY KEY ("Row"),
     CONSTRAINT "FK_Address_Id" FOREIGN KEY ("Id")
         REFERENCES public."Person" ("Id") MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE NO ACTION
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
 );
 
 ALTER TABLE IF EXISTS public."Address"

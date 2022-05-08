@@ -1,4 +1,5 @@
-﻿using DemoNetCoreDb.Redis;
+﻿using DemoNetCoreDb.SQLite;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
@@ -10,11 +11,12 @@ services.AddLogging(builder =>
     builder.SetMinimumLevel(LogLevel.Information);
     builder.AddConsole();
 });
-services.AddStackExchangeRedisCache(options =>
+services.AddDbContext<DemoNetCoreDbContext>(option =>
 {
-    //options.ConfigurationOptions
-    options.Configuration = "localhost:6379,defaultDatabase=0";
-    //options.InstanceName = "";
+    //option.UseInMemoryDatabase(databaseName: "DemoNetCoreDb");
+    option.UseSqlite("Data Source=d:/Database/SQLite/DemoNetCoreDb.db;");
+    option.EnableSensitiveDataLogging();
+    option.EnableDetailedErrors();
 });
 services.AddSingleton<Runner>();
 
