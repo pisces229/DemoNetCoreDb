@@ -27,11 +27,16 @@ namespace DemoNetCoreDb.Redis
         }
         public async Task DoAction()
         {
-            _logger.LogInformation("DoAction Begin");
+            await DoCRUD();
+        }
+        public async Task DoCRUD()
+        {
+            _logger.LogInformation("start");
             await _cache.SetStringAsync("key", "value");
             var value = await _cache.GetStringAsync("key");
+            _logger.LogInformation($"{value}");
             await _cache.RemoveAsync("key");
-            _logger.LogInformation("DoAction End");
+            _logger.LogInformation("end");
         }
     }
 }

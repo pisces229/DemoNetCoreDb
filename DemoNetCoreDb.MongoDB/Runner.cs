@@ -29,9 +29,32 @@ namespace DemoNetCoreDb.MongoDB
             }
 
         }
-        public async Task DoAction()
+        private async Task DoAction()
         {
-            _logger.LogInformation("Run Begin");
+            await DoCRUD();
+            //await DoExample();
+        }
+        private async Task DoCRUD()
+        {
+            var mongoDatabase = _defaultMongoClient.GetDatabase("Demo");
+            var bookCollection = mongoDatabase.GetCollection<Book>("Book");
+            var defaultData = new Book()
+            {
+                BookId = "BookId",
+                BookName = "BookName",
+                Price = 100,
+                Category = "Category",
+                Author = "Author"
+            };
+            await bookCollection.InsertOneAsync(defaultData);
+            var findDatas = await bookCollection.Find(f => f.BookId == "BookId").ToListAsync();
+            _logger.LogInformation($"{findDatas.Any()}");
+            defaultData.BookId = "NewBookId";
+            await bookCollection.FindOneAndReplaceAsync(f => f.BookId == "BookId", defaultData);
+            await bookCollection.DeleteOneAsync(f => f.BookId == "NewBookId");
+        }
+        private async Task DoExample()
+        {
             var mongoDatabase = _defaultMongoClient.GetDatabase("Demo");
             var bookCollection = mongoDatabase.GetCollection<Book>("Book");
 
@@ -124,8 +147,6 @@ namespace DemoNetCoreDb.MongoDB
             //var updateDefinition = Builders<Book>.Update.Set("BookName", "456");
             //await bookCollection.UpdateOneAsync(fieldDefinition, updateDefinition);
             //await bookCollection.FindOneAndUpdateAsync(fieldDefinition, updateDefinition);
-
-            _logger.LogInformation("Run End");
         }
     }
 }

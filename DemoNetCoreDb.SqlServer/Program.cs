@@ -8,7 +8,7 @@ Console.WriteLine(args);
 var services = new ServiceCollection();
 services.AddLogging(builder =>
 {
-    builder.SetMinimumLevel(LogLevel.Information);
+    builder.SetMinimumLevel(LogLevel.Trace);
     builder.AddConsole();
 });
 services.AddDbContext<DemoNetCoreDbContext>(option =>

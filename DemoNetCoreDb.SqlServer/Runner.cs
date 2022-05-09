@@ -1,13 +1,17 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System.Linq.Expressions;
 
 namespace DemoNetCoreDb.SqlServer
 {
     public class Runner
     {
+        private readonly ILogger<Runner> _logger;
         private readonly DemoNetCoreDbContext _dbContext;
-        public Runner(DemoNetCoreDbContext dbContext)
+        public Runner(ILogger<Runner> logger,
+            DemoNetCoreDbContext dbContext)
         {
+            _logger = logger;
             _dbContext = dbContext;
         }
         public void Run()
@@ -22,18 +26,38 @@ namespace DemoNetCoreDb.SqlServer
             }
 
         }
-        public async Task DoAction()
+        private async Task DoAction()
         {
-            await DoQueryableToQueryString();
+            await DoCRUD();
+            DoQueryableToQueryString();
             //await DoCreateUpdate();
             //await ClearCreate();
             //await DoFindInclude();
             //await DoQueryable();
             //await DoExpression();
         }
-        private async Task DoQueryableToQueryString()
+        private async Task DoCRUD()
         {
-            await Task.FromResult("DoQueryableToScript");
+            var defaultData = new Person()
+            {
+                Id = "1",
+                Name = "1",
+                Age = 1,
+                Birthday = DateTime.Now,
+                Remark = "",
+            };
+            await _dbContext.People.AddAsync(defaultData);
+            await _dbContext.SaveChangesAsync();
+            var findDatas = await _dbContext.People.Where(w => w.Id == "1").ToListAsync();
+            _logger.LogInformation($"{findDatas.Any()}");
+            defaultData.Remark = Guid.NewGuid().ToString();
+            _dbContext.People.Update(defaultData);
+            await _dbContext.SaveChangesAsync();
+            _dbContext.People.Remove(defaultData);
+            await _dbContext.SaveChangesAsync();
+        }
+        private void DoQueryableToQueryString()
+        {
             var query = _dbContext.People.AsQueryable();
             // EF.Functions.
 
