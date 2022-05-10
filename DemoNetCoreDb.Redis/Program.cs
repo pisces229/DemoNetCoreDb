@@ -16,11 +16,13 @@ services.AddStackExchangeRedisCache(options =>
     //options.ConfigurationOptions
     options.Configuration = "localhost:6379,defaultDatabase=0";
     //options.InstanceName = "";
+
     //var connectionMultiplexer = ConnectionMultiplexer.Connect("localhost:6379,defaultDatabase=0");
     //connectionMultiplexer.Configure(new RedisWriterLogger());
     //options.ConnectionMultiplexerFactory = async () =>  await Task.FromResult(connectionMultiplexer);
 });
 services.AddSingleton<Runner>();
+services.AddSingleton<IConnectionMultiplexer>(provider => ConnectionMultiplexer.Connect("localhost:6379,defaultDatabase=0"));
 
 var serviceProvider = services.BuildServiceProvider();
 try
