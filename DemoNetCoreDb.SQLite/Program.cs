@@ -23,6 +23,10 @@ services.AddSingleton<Runner>();
 var serviceProvider = services.BuildServiceProvider();
 try
 {
+    using (var dbcontext = serviceProvider.GetRequiredService<DemoNetCoreDbContext>())
+    {
+        Console.WriteLine($"Database EnsureCreated:[{dbcontext.Database.EnsureCreated()}]");
+    }
     serviceProvider.GetRequiredService<Runner>().Run();
 }
 finally
